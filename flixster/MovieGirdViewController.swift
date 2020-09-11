@@ -9,7 +9,7 @@
 import UIKit
 import AlamofireImage
 
-class MovieGirdViewController: UIViewController,UICollectionViewDelegate, UICollectionViewDataSource {
+class MovieGirdViewController: UIViewController,UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     
 
@@ -22,13 +22,6 @@ class MovieGirdViewController: UIViewController,UICollectionViewDelegate, UIColl
         collectionView.delegate = self
         collectionView.dataSource = self
         
-        let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
-        
-        layout.minimumLineSpacing = 4
-        layout.minimumInteritemSpacing = 4
-        
-        let width = (view.frame.size.width - layout.minimumInteritemSpacing * 2) / 3
-        layout.itemSize = CGSize(width: width, height: width * 3 / 2)
         
         // Do any additional setup after loading the view.
         let url = URL(string: "https://api.themoviedb.org/3/movie/297762/similar?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed")!
@@ -70,14 +63,40 @@ class MovieGirdViewController: UIViewController,UICollectionViewDelegate, UIColl
         
         return cell
     }
-    /*
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
+        
+        layout.minimumLineSpacing = 4
+        layout.minimumInteritemSpacing = 4
+        
+        let width = (view.frame.size.width - layout.minimumInteritemSpacing * 4) / 3
+        
+        layout.itemSize = CGSize(width: width, height: width * 3 / 2)
+        return layout.itemSize
+        
+    }
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
+        
+        print("Loading grid movie screen")
+        
+        let cell = sender as! UICollectionViewCell
+        let indexPath = collectionView.indexPath(for: cell)!
+        let movie = movies[indexPath.row]
+        
         // Pass the selected object to the new view controller.
+        let girdDetailsViewController = segue.destination as! MovieGirdDetailsViewController
+        girdDetailsViewController.movie = movie
+        
+        collectionView.deselectItem(at: indexPath, animated: true)
+        
     }
-    */
+    
 
 }
